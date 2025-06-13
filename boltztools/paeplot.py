@@ -1,7 +1,8 @@
 from argparse import ArgumentParser
 from pathlib import Path
-import numpy as np
+
 import matplotlib
+import numpy as np
 from matplotlib import pyplot as plt
 
 from .logger import generate_logger
@@ -10,6 +11,7 @@ matplotlib.use("Agg")
 
 
 LOGGER = generate_logger(__name__)
+
 
 class PaePlot:
     args: ArgumentParser
@@ -32,13 +34,16 @@ class PaePlot:
     def plot_pae(self, pae_npz):
         with np.load(pae_npz) as data:
             plt.figure(figsize=(8, 6))
-            im = plt.imshow(data['pae'], cmap=self.args.cmap, interpolation='nearest')
-            plt.colorbar(im, label='Predicted Aligned Error [Å]')
-            plt.xlabel('Residue Index')
-            plt.ylabel('Residue Index')
+            im = plt.imshow(data["pae"], cmap=self.args.cmap, interpolation="nearest")
+            plt.colorbar(im, label="Predicted Aligned Error [Å]")
+            plt.xlabel("Residue Index")
+            plt.ylabel("Residue Index")
             plt.title(f"{self.args.title}")
             plt.tight_layout()
-            plt.savefig(f"{pae_npz.parent}/{pae_npz.stem}{self.args.output}.png", dpi=self.args.dpi)
+            plt.savefig(
+                f"{pae_npz.parent}/{pae_npz.stem}{self.args.output}.png",
+                dpi=self.args.dpi,
+            )
             LOGGER.info(f"Saved {pae_npz.parent}/{pae_npz.stem}{self.args.output}.png")
             plt.clf()
             plt.close()
@@ -53,4 +58,3 @@ class PaePlot:
             self.plot_all_paes()
         else:
             self.plot_best_pae()
-
